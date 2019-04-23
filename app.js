@@ -83,7 +83,7 @@ new Vue({
 			}
 		},
 		log: function(action, attacker, defender, damage) {
-			this.actionLogs.push({
+			this.actionLogs.unshift({
 				action,
 				attacker,
 				defender,
