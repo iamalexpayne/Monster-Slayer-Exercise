@@ -22,29 +22,29 @@ new Vue({
 		playersTurn: function() {
 			// if it's the monster's turn, determine action and execute
 			if (!this.playersTurn && this.monsterHealth > 0) {
-				const move = this.getNumberBetween(1,3)
-				switch (move) {
-					case 1:	// attack
-						this.attack('player', 1)
-						break
+				setTimeout(() => {
+					const move = this.getNumberBetween(1,3)
+					switch (move) {
+						case 1:	// attack
+							this.attack('player', 1)
+							break
 
-					case 2:	// special attack
-						this.attack('player', 2)
-						break
+						case 2:	// special attack
+							this.attack('player', 2)
+							break
 
-					case 3:	// heal
-					this.playersTurn = true
-						this.heal('monster')
-						break
-				}
+						case 3:	// heal
+						this.playersTurn = true
+							this.heal('monster')
+							break
+					}
+				}, 1000)
 			}
 		}
 	},
 
 	// TODO:
 	// End game win or lose triggering
-	// Monster thinking time debugging 
-
 
 	methods: {
 		newGame: function() {
@@ -87,15 +87,10 @@ new Vue({
 			// apply damage to defender
 			if (defender === 'monster') {
 				this.monsterHealth -= damage
-				setTimeout(() => {
-					this.playersTurn = false
-				}, 300)
+				this.playersTurn = false
 			} else {
-				setTimeout(() => {
-					this.playerHealth -= damage
-					this.playersTurn = true
-				}, 900)
-				// this.playersTurn = true
+				this.playerHealth -= damage
+				this.playersTurn = true
 			}
 
 			// log the attack
@@ -110,16 +105,11 @@ new Vue({
 
 			// apply health to nursed
 			if (nursed === 'monster') {
-				setTimeout(() => {
-					this.monsterHealth += health
-					this.playersTurn = true
-				}, 800)
+				this.monsterHealth += health
+				this.playersTurn = true
 			} else {
 				this.playerHealth += health
-				setTimeout(() => {
-					this.playersTurn = false
-				}, 800)
-				// this.playersTurn = false
+				this.playersTurn = false
 			}
 
 			// log the attack
