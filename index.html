@@ -7,47 +7,55 @@
 	<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div id="app">
-	<section class="row">
-		<div class="small-6 columns">
-			<h1 class="text-center">YOU</h1>
-			<div class="healthbar">
-				<div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+	<div id="app">
+		<section class="row">
+			<div class="small-6 columns">
+				<h1 class="text-center">YOU</h1>
+				<div class="healthbar">
+					<div class="healthbar text-center" :style="playerRemaining" style="background-color: green; margin: 0; color: white;">
+						{{ playerHealth }}
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="small-6 columns">
-			<h1 class="text-center">MONSTER</h1>
-			<div class="healthbar">
-				<div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+			<div class="small-6 columns">
+				<h1 class="text-center">MONSTER</h1>
+				<div class="healthbar">
+					<div class="healthbar text-center" :style="monsterRemaining" style="background-color: green; margin: 0; color: white;">
+						{{ monsterHealth }}
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-	<section class="row controls">
-		<div class="small-12 columns">
-			<button id="start-game">START NEW GAME</button>
-		</div>
-	</section>
-	<section class="row controls">
-		<div class="small-12 columns">
-			<button id="attack">ATTACK</button>
-			<button id="special-attack">SPECIAL ATTACK</button>
-			<button id="heal">HEAL</button>
-			<button id="give-up">GIVE UP</button>
-		</div>
-	</section>
-	<section class="row log">
-		<div class="small-12 columns">
-			<ul>
-				<li>
+		</section>
+		<section v-if="gameover" class="row controls">
+			<div class="small-12 columns">
+				<button id="start-game" @click="newGame">START NEW GAME</button>
+			</div>
+		</section>
+		<section v-else class="row controls">
+			<div class="small-12 columns">
+				<template v-if="playersTurn">
+					<button id="attack" @click="attack('monster', 1)">ATTACK</button>
+					<button id="special-attack" @click="attack('monster', 2)">SPECIAL ATTACK</button>
+					<button id="heal" @click="heal('player')">HEAL</button>
+					<button id="give-up" @click="playerDies">GIVE UP</button>
+				</template>
+				<template v-else>
+					<h3>Monster's move...</h3>
+				</template>
+			</div>
 
-				</li>
-			</ul>
-		</div>
-	</section>
-</div>
+		</section>
+		<section v-if="!gameover" class="row log">
+			<h3 v-if="justStarted">Attack the monster so you don't  get eaten!</h3>
+			<div class="small-12 columns">
+				<ul>
+					<li v-for="log in actionLogs" :class="log.attacker + '-turn'">
+						{{ log.attacker }} {{ log.action }} {{ log.defender }} for {{ log.damage }}
+					</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+	<script type="text/javascript" src="app.js"></script>
 </body>
 </html>
