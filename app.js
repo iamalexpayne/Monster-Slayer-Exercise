@@ -15,10 +15,7 @@ new Vue({
 			return { width: this.monsterHealth + '%' }
 		},
 		justStarted: function() {
-			if (this.actionLogs.length < 1) {
-				return true
-			}
-			return false
+			return this.actionLogs.length < 1
 		}
 	},
 	watch: {
@@ -43,6 +40,12 @@ new Vue({
 			}
 		}
 	},
+
+	// TODO:
+	// End game win or lose triggering
+	// Monster thinking time debugging 
+
+
 	methods: {
 		newGame: function() {
 			this.gameover = false
@@ -75,10 +78,12 @@ new Vue({
 		attack: function(defender, special) {
 			//determine roles
 			const attacker = defender === 'monster' ? 'player' : 'monster'
+
 			// determine attack damage between 8 and 16
 			// if special attack, damage doubles
 			const damage = this.getNumberBetween(8,16) * special
 			const action = special > 1 ? 'brutally attacked' : 'attacked'
+
 			// apply damage to defender
 			if (defender === 'monster') {
 				this.monsterHealth -= damage
@@ -92,14 +97,17 @@ new Vue({
 				}, 900)
 				// this.playersTurn = true
 			}
+
 			// log the attack
 			this.log(action, attacker, defender, damage)
 		},
 		heal: function(nursed) {
 			//determine roles
 			const pronoun = nursed === 'monster' ? 'itself' : 'himself'
+
 			// determine health amount between 8 and 16
 			const health = this.getNumberBetween(8,16)
+
 			// apply health to nursed
 			if (nursed === 'monster') {
 				setTimeout(() => {
@@ -113,6 +121,7 @@ new Vue({
 				}, 800)
 				// this.playersTurn = false
 			}
+
 			// log the attack
 			this.log('healed', nursed, pronoun, health)
 		}

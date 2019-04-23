@@ -46,7 +46,7 @@
 
 		</section>
 		<section v-if="!gameover" class="row log">
-			<h3 v-if="justStarted">Attack the monster so you don't  get eaten!</h3>
+			<h3 v-if="justStarted">Attack the monster so you don't get eaten!</h3>
 			<div class="small-12 columns">
 				<ul>
 					<li v-for="log in actionLogs" :class="log.attacker + '-turn'">
