@@ -2,6 +2,7 @@ new Vue({
 	el: '#app',
 	data: {
 		gameover: true,
+		noRedo: false,
 		playersTurn: true,
 		playerHealth: 50,
 		monsterHealth: 50,
@@ -20,11 +21,11 @@ new Vue({
 	},
 	watch: {
 		playersTurn: function() {
-			// if it's the monster's turn, determine action and execute
+			// determine monster's action and execute
 			if (!this.playersTurn && this.monsterHealth > 0) {
 				setTimeout(() => {
-					const move = this.getNumberBetween(1,3)
-					switch (move) {
+					const monstersMove = this.getNumberBetween(1,3)
+					switch (monstersMove) {
 						case 1:	// attack
 							this.attack('player', 1)
 							break
@@ -42,13 +43,11 @@ new Vue({
 			}
 		}
 	},
-
-	// TODO:
-	// End game win or lose triggering
-
 	methods: {
 		newGame: function() {
 			this.gameover = false
+			this.noRedo = true
+			this.playersTurn = true
 			this.playerHealth = 100
 			this.monsterHealth = 100
 			this.actionLogs = []
@@ -56,12 +55,32 @@ new Vue({
 		playerDies: function() {
 			this.playerHealth = 0
 			setTimeout(() => {
-				if (confirm('You were eaten by the monster. \n\nTry again?')) {
+				if (confirm('Oh no! You were eaten by the monster. \n\nTry again?')) {
 					this.newGame()
 				} else {
 					this.gameover = true
+					this.noRedo = true
 				}
 			}, 500)
+		},
+		monsterDies: function() {
+			this.monsterHealth = 0
+			setTimeout(() => {
+				if (confirm('Huzzah! You vanquished the monster!. \n\nPlay again?')) {
+					this.newGame()
+				} else {
+					this.gameover = true
+					this.noRedo = true
+				}
+			}, 500)
+		},
+		determineOutcome: function() {
+			if (this.playerHealth <= 0) {
+				this.playerDies()
+			}
+			if (this.monsterHealth <= 0) {
+				this.monsterDies()
+			}
 		},
 		log: function(action, attacker, defender, damage) {
 			this.actionLogs.push({
@@ -95,6 +114,9 @@ new Vue({
 
 			// log the attack
 			this.log(action, attacker, defender, damage)
+
+			// check for winner
+			this.determineOutcome()
 		},
 		heal: function(nursed) {
 			//determine roles
